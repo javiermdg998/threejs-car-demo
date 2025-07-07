@@ -49,7 +49,7 @@ animate();
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-window.addEventListener('click', onClick, false);
+renderer.domElement.addEventListener('click', onClick, false);
 
 async function onClick(event: MouseEvent) {
 
@@ -63,10 +63,11 @@ async function onClick(event: MouseEvent) {
 
 
     if (intersects.length > 0) {
-        const color2 = await showColorModal();
+        const color = await showColorModal();
+        if(!color) return;
         const objectSelected = intersects[0].object;
         console.log('Objeto clickeado:', objectSelected);
 
-        (objectSelected as THREE.Mesh).material = new THREE.MeshBasicMaterial({ color: color2 });
+        (objectSelected as THREE.Mesh).material = new THREE.MeshBasicMaterial({ color: color });
     }
 }
