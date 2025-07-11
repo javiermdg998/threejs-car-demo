@@ -38,11 +38,13 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
+/* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+} */
+button:active{
+    background-color: #3b3b3b;
 }
-
 
 #add, #remove{
   position: absolute;
@@ -97,6 +99,20 @@ button:focus-visible {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+#toggle-warning{
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
 }
 
 @keyframes popIn {

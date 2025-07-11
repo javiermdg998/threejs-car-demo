@@ -4,6 +4,7 @@ import './style.css'
 import { OBJLoader } from 'three/examples/jsm/Addons.js';
 import CAR_URL from './models/car/car.obj?url'
 import { showColorModal } from './components/modal';
+import type { Animation } from './animations/abstractions/i-animation';
 
 const loader = new OBJLoader();
 loader.load(CAR_URL, function (obj) {
@@ -13,6 +14,7 @@ loader.load(CAR_URL, function (obj) {
         }
     })
     scene.add(obj)
+    // animations.push(new WarningAnimation((obj)));
 },
 function (progress) {
     console.log(progress.total)
@@ -25,7 +27,6 @@ function (error) {
 
 
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(
     75, window.innerWidth / window.innerHeight, 0.1, 1000
 );
@@ -35,24 +36,26 @@ renderer.setSize(window.innerWidth, window.innerHeight, true);
 document.body.appendChild(renderer.domElement);
 camera.position.z = 5;
 
+const animations : Animation[] = [];
 
-function animate() {
-    requestAnimationFrame(animate);
+function loop() {
+    requestAnimationFrame(loop);
+    animations.forEach(animation => animation.animate());
 
     scene.rotation.y += 0.01;
     renderer.render(scene, camera);
 }
-animate();
+loop();
 
 
 
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
 
 renderer.domElement.addEventListener('click', onClick, false);
 
 async function onClick(event: MouseEvent) {
-
+    
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
@@ -63,11 +66,10 @@ async function onClick(event: MouseEvent) {
 
 
     if (intersects.length > 0) {
-        const color = await showColorModal();
-        if(!color) return;
         const objectSelected = intersects[0].object;
+        const color = await showColorModal({scene, animations}, objectSelected);
+        if(!color) return;
         console.log('Objeto clickeado:', objectSelected);
-
         (objectSelected as THREE.Mesh).material = new THREE.MeshBasicMaterial({ color: color });
     }
 }
