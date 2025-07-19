@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/examples/jsm/Addons.js';
 import CAR_URL from './models/car/car.obj?url'
 import { showColorModal } from './components/modal';
 import type { Animation } from './animations/abstractions/i-animation';
+import { RotateYAnimation } from './animations/rotateY-animation';
 
 const loader = new OBJLoader();
 loader.load(CAR_URL, function (obj) {
@@ -14,7 +15,7 @@ loader.load(CAR_URL, function (obj) {
         }
     })
     scene.add(obj)
-    // animations.push(new WarningAnimation((obj)));
+    animations.push(new RotateYAnimation((obj)));
 },
 function (progress) {
     console.log(progress.total)
@@ -38,11 +39,11 @@ camera.position.z = 5;
 
 const animations : Animation[] = [];
 
+
 function loop() {
     requestAnimationFrame(loop);
     animations.forEach(animation => animation.animate());
 
-    scene.rotation.y += 0.01;
     renderer.render(scene, camera);
 }
 loop();
